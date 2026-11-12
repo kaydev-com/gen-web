@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Generator Template Web App</title>
+<script>
+window.onerror = function (msg) {
+  var w = document.getElementById("js-warning");
+  if (w) { w.style.display = "block"; w.innerHTML = "⚠️ <b>Ada error JavaScript:</b> " + msg + "<br>Buka file ini memakai <b>Chrome</b> (bukan preview file), lalu kirim pesan error ini."; }
+  return false;
+};
+</script>
+<style>
+  :root{--navy:#0e3a5d;--blue:#1565c0;--ink:#17222c;--muted:#66788a;--line:#dbe3ec;--bg:#eef2f6;--card:#fff;--radius:14px;--shadow:0 2px 10px rgba(14,58,93,.08)}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45;padding-bottom:40px}
+  button,input,select,textarea{font:inherit}
+  header{position:sticky;top:0;z-index:30;background:var(--navy);color:#fff;padding:14px 16px}
+  header h1{margin:0;font-size:18px} header p{margin:3px 0 0;font-size:12.5px;opacity:.85}
+  main{max-width:760px;margin:0 auto;padding:12px}
+  #js-warning{display:block;background:#fdecea;border:1px solid #f5c6cb;color:#7b1f1f;border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:13.5px}
+  .note{background:#fff7e6;border:1px solid #f3d9a4;border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:13.5px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);margin-bottom:12px}
+  .panel h2{margin:0 0 10px;font-size:15.5px}
+  .field{margin-bottom:11px} .field label{display:block;font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:5px}
+  .field input[type=text],.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff}
+  .field textarea{min-height:64px} .field textarea.tall{min-height:110px}
+  .opts{display:flex;flex-wrap:wrap;gap:6px}
+  .opt{border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700;background:#fff;cursor:pointer}
+  .opt input{margin-right:5px}
+  .check{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:14px}
+  .check input{margin-top:3px;width:18px;height:18px}
+  .btn{border:0;border-radius:10px;padding:11px 14px;font-weight:700;font-size:14px;cursor:pointer}
+  .btn-green{background:#1faa55;color:#fff} .btn-blue{background:var(--blue);color:#fff} .btn-ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}
+  .tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  textarea.preview{width:100%;min-height:300px;border:1px solid var(--line);border-radius:10px;padding:10px;background:#f8fafc;font-size:13.5px}
+  .muted{color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Generator Template Web App</h1>
+  <p>Isi form → teks permintaan jadi otomatis → salin &amp; kirim ke Muse</p>
+</header>
+<main>
+  <div id="js-warning">Memuat aplikasi… Jika pesan ini tidak hilang, JavaScript tidak jalan di penampil ini — buka file memakai <b>Chrome</b>.</div>
+  <div class="note">📌 <b>Cara pakai:</b> 1) isi form di bawah (isian tersimpan otomatis di HP ini), 2) teks permintaan terbentuk sendiri di panel <b>Hasil</b>, 3) tekan <b>Salin Teks Hasil</b> lalu tempel &amp; kirim ke Muse di chat. Kolom yang belum diisi muncul sebagai [TANDA KURUNG] di hasil — boleh tetap dikirim, nanti Muse yang menanyakan.</div>
+
+  <div class="panel" id="formWrap">
+    <h2>Isi Template</h2>
+    <div class="field"><label>Nama App</label><input id="gNama" type="text" placeholder="cth: Program Kerja"></div>
+    <div class="field"><label>Tujuan / Pekerjaan</label><input id="gTujuan" type="text" placeholder="cth: manajemen &amp; monitoring program kerja tahunan"></div>
+    <div class="field"><label>Sumber &amp; Contoh Data</label>
+      <select id="gSumber">
+        <option value="Foto tabel terlampir — ikuti persis contoh di foto">Foto tabel terlampir</option>
+        <option value="Daftar / contoh teks yang saya lampirkan di chat">Daftar / contoh teks terlampir</option>
+        <option value="File Excel saya — ikuti struktur file-nya">File Excel saya</option>
+        <option value="Format lama saya — perbaiki tanpa mengubah format keluarannya">Format lama saya</option>
+      </select>
+    </div>
+    <div class="field"><label>Isi / Kolom Data (pisahkan dengan koma)</label><textarea id="gKolom" placeholder="cth: No, Nama Program, Tahun, PIC, Plan per bulan, Actual per bulan, Keterangan"></textarea></div>
+    <div class="field"><label>Aturan Utama</label><textarea id="gAturan" placeholder="cth: Plan &amp; Actual ditandai per bulan (Jan–Des); status otomatis Selesai / Terlambat / Berjalan / Belum Dimulai dari Plan vs Actual"></textarea></div>
+    <div class="field"><label>Alur Web App (Algoritma) — langkah-langkah alur app</label><textarea id="gAlur" class="tall" placeholder="cth:&#10;1. User membuka app → tampil dashboard &amp; data periode berjalan&#10;2. User menambah / mengimpor data → tersimpan&#10;3. User menandai progres → persen &amp; status terhitung ulang&#10;4. Data lewat jadwal masuk daftar Perlu Perhatian&#10;5. User menyalin ringkasan / export untuk dibagikan"></textarea></div>
+    <div class="field"><label>Tampilan</label>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="gTampilan" value="Matriks seperti tabel contoh">Matriks</label>
+        <label class="opt"><input type="radio" name="gTampilan" value="Kartu per item">Kartu</label>
+        <label class="opt"><input type="radio" name="gTampilan" value="Matriks + Kartu" checked>Matriks + Kartu</label>
+      </div>
+    </div>
+    <div class="field"><label>Output yang Diperlukan</label>
+      <label class="check"><input type="checkbox" id="gOutWa" checked><span>Ringkasan WhatsApp siap salin</span></label>
+      <label class="check"><input type="checkbox" id="gOutCsv" checked><span>Export CSV</span></label>
+      <label class="check"><input type="checkbox" id="gOutBackup" checked><span>Backup &amp; restore JSON</span></label>
+      <label class="check"><input type="checkbox" id="gOutImport"><span>Import daftar item dari teks yang dipisah koma</span></label>
+      <label class="check"><input type="checkbox" id="gOutPrint"><span>Cetak / print tampilan</span></label>
+      <input id="gOutLain" type="text" placeholder="Output lain (opsional), cth: export PDF">
+    </div>
+    <div class="field"><label>Penyimpanan</label>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="gSimpan" value="localStorage dengan export & import data (backup & restore JSON)" checked>localStorage (bisa export &amp; import)</label>
+        <label class="opt"><input type="radio" name="gSimpan" value="Langsung GAS + GitHub Pages">Langsung GAS + GitHub Pages</label>
+      </div>
+    </div>
+    <div class="field"><label>Penandaan Waktu</label>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="gWaktu" value="Per bulan" checked>Per bulan</label>
+        <label class="opt"><input type="radio" name="gWaktu" value="Per tanggal">Per tanggal</label>
+      </div>
+    </div>
+    <label class="check"><input type="checkbox" id="gPIC"><span>Perlu kolom PIC / penanggung jawab</span></label>
+    <div class="field"><label>Data Contoh</label>
+      <select id="gLengkap">
+        <option value="Sudah lengkap">Sudah lengkap</option>
+        <option value="Baru sebagian — sisanya menyusul">Baru sebagian — sisanya menyusul</option>
+        <option value="Hanya contoh format — data asli menyusul">Hanya contoh format — data asli menyusul</option>
+      </select>
+    </div>
+    <div class="field"><label>Kunci localStorage (otomatis dari nama app, boleh diubah)</label><input id="gKey" type="text" placeholder="cth: programKerjaV1"></div>
+
+    <h2 style="margin-top:16px">Tambahan (opsional, centang yang perlu)</h2>
+    <label class="check"><input type="checkbox" id="gOptStatus"><span>Urutan status khusus</span></label>
+    <div class="field"><input id="gStatusText" type="text" placeholder="cth: TP Diterima → Proses TP → Proses BAP → Selesai"></div>
+    <label class="check"><input type="checkbox" id="gOptFormat"><span>Format teks WhatsApp saya sendiri</span></label>
+    <div class="field"><textarea id="gFormatText" placeholder="Tempel contoh format teks WhatsApp yang biasa dipakai"></textarea></div>
+    <label class="check"><input type="checkbox" id="gOptDash"><span>Dashboard ringkas di bagian atas</span></label>
+    <div class="field"><input id="gDashText" type="text" value="total / selesai / terlambat / persen rata-rata"></div>
+    <label class="check"><input type="checkbox" id="gOptAttn"><span>Daftar "Perlu Perhatian" untuk yang lewat jadwal</span></label>
+    <label class="check"><input type="checkbox" id="gOptDup"><span>Fitur duplikat data ke tahun / periode berikutnya</span></label>
+  </div>
+
+  <div class="panel">
+    <h2>Hasil — Teks Siap Salin</h2>
+    <div class="tools">
+      <button class="btn btn-green" onclick="copyText()">📋 Salin Teks Hasil</button>
+      <button class="btn btn-blue" onclick="fillExample()">Lihat Contoh Terisi</button>
+      <button class="btn btn-ghost" onclick="resetForm()">🧹 Reset Form</button>
+    </div>
+    <div class="tools">
+      <button class="btn btn-blue" onclick="exportData()">💾 Export Data (JSON)</button>
+    </div>
+    <label class="muted" style="display:block;margin-bottom:8px">Import data dari file backup JSON: <input type="file" id="importFile" accept=".json,application/json" onchange="importData(event)"></label>
+    <textarea class="preview" id="outPreview" readonly></textarea>
+    <p class="muted" id="saveInfo"></p>
+  </div>
+</main>
+<script>
+var KEY = "templateChatWebappV1";
+var memFallback = null;
+var keyTouched = false;
+
+function el(id) { return document.getElementById(id); }
+function trim(s) { return String(s || "").replace(/^\s+|\s+$/g, ""); }
+function radioVal(name) { var rs = document.getElementsByName(name); for (var i = 0; i < rs.length; i++) { if (rs[i].checked) { return rs[i].value; } } return ""; }
+function setRadio(name, val) { var rs = document.getElementsByName(name); for (var i = 0; i < rs.length; i++) { rs[i].checked = (rs[i].value === val); } }
+function slugKey(nama) {
+  var words = String(nama || "").split(/[^A-Za-z0-9]+/), out = "";
+  for (var i = 0; i < words.length; i++) {
+    if (!words[i]) { continue; }
+    var w = words[i].toLowerCase();
+    out += (out === "") ? w : (w.charAt(0).toUpperCase() + w.slice(1));
+  }
+  return out ? out + "V1" : "";
+}
+
+function generate() {
+  var nama = trim(el("gNama").value) || "[NAMA APP]";
+  var tujuan = trim(el("gTujuan").value) || "[TUJUAN / PEKERJAAN SAYA]";
+  var kolom = trim(el("gKolom").value) || "[DAFTAR KOLOM]";
+  var aturan = trim(el("gAturan").value) || "[ATURAN UTAMA]";
+  var alur = trim(el("gAlur").value) || "[LANGKAH-LANGKAH ALUR]";
+  var key = trim(el("gKey").value) || "[namaAppV1]";
+  var outs = [];
+  if (el("gOutWa").checked) { outs.push("ringkasan WhatsApp siap salin"); }
+  if (el("gOutCsv").checked) { outs.push("export CSV"); }
+  if (el("gOutBackup").checked) { outs.push("backup & restore JSON"); }
+  if (el("gOutImport").checked) { outs.push("import daftar item dari teks yang dipisah koma"); }
+  if (el("gOutPrint").checked) { outs.push("cetak / print tampilan"); }
+  if (trim(el("gOutLain").value)) { outs.push(trim(el("gOutLain").value)); }
+
+  var L = [];
+  L.push("Buatkan saya web app " + nama + " untuk " + tujuan + ".");
+  L.push("");
+  L.push("Sumber & contoh data: " + el("gSumber").value + ".");
+  L.push("Isi / kolom datanya: " + kolom + ".");
+  L.push("Aturan utamanya: " + aturan + ".");
+  L.push("Alur web app (algoritma):");
+  L.push(alur);
+  L.push("Tampilannya: " + radioVal("gTampilan") + ".");
+  L.push("Output yang saya perlukan: " + (outs.length ? outs.join(", ") : "[OUTPUT]") + ".");
+  L.push("Penyimpanannya: " + radioVal("gSimpan") + ".");
+  L.push("Penandaan waktu: " + radioVal("gWaktu") + ". Perlu kolom PIC: " + (el("gPIC").checked ? "Ya" : "Tidak") + ". Data contoh: " + el("gLengkap").value + ".");
+  L.push("");
+  L.push("Standar wajib (ikuti seperti app saya sebelumnya):");
+  L.push("1. Satu file HTML, mobile-first, dibuka di Chrome HP (bukan preview chat).");
+  L.push("2. JavaScript gaya lama yang aman di penampil file lama + banner peringatan merah bila JavaScript gagal jalan.");
+  L.push("3. Tombol bagikan = SALIN TEKS + kotak preview teksnya (bukan link WhatsApp).");
+  L.push("4. Kunci localStorage baru & unik untuk app ini: " + key + ".");
+  L.push("5. Simpan anti-dobel (satu ketuk = satu data) + fallback memori bila localStorage diblokir.");
+  L.push("6. Data yang tidak terlihat / terpotong di contoh jangan diasumsikan — kosongkan dan beri catatan di dalam app.");
+  L.push("7. Sebelum membangun, konfirmasi singkat bila ada yang belum jelas dari isian saya di atas.");
+  L.push("8. Setelah jadi, uji alur utamanya secara otomatis dan laporkan hasil tesnya sebelum file dikirim.");
+
+  var extra = [];
+  if (el("gOptStatus").checked) { extra.push("- Urutan statusnya: " + (trim(el("gStatusText").value) || "[STATUS 1 → STATUS 2 → Selesai]") + "."); }
+  if (el("gOptFormat").checked) { extra.push("- Format teks WhatsApp saya:\n" + (trim(el("gFormatText").value) || "[CONTOH FORMAT]")); }
+  if (el("gOptDash").checked) { extra.push("- Dashboard ringkas di bagian atas: " + (trim(el("gDashText").value) || "total / selesai / terlambat / persen rata-rata") + "."); }
+  if (el("gOptAttn").checked) { extra.push("- Ada daftar \"Perlu Perhatian\" untuk yang lewat jadwal."); }
+  if (el("gOptDup").checked) { extra.push("- Ada fitur duplikat data ke tahun / periode berikutnya."); }
+  if (extra.length) { L.push(""); L.push("Tambahan:"); for (var i = 0; i < extra.length; i++) { L.push(extra[i]); } }
+
+  el("outPreview").value = L.join("\n");
+}
+
+function collect() {
+  return {
+    nama: el("gNama").value, tujuan: el("gTujuan").value, sumber: el("gSumber").value,
+    kolom: el("gKolom").value, aturan: el("gAturan").value, alur: el("gAlur").value,
+    tampilan: radioVal("gTampilan"),
+    outWa: el("gOutWa").checked, outCsv: el("gOutCsv").checked, outBackup: el("gOutBackup").checked,
+    outImport: el("gOutImport").checked, outPrint: el("gOutPrint").checked, outLain: el("gOutLain").value,
+    simpan: radioVal("gSimpan"), waktu: radioVal("gWaktu"), pic: el("gPIC").checked,
+    lengkap: el("gLengkap").value, key: el("gKey").value, keyTouched: keyTouched,
+    optStatus: el("gOptStatus").checked, statusText: el("gStatusText").value,
+    optFormat: el("gOptFormat").checked, formatText: el("gFormatText").value,
+    optDash: el("gOptDash").checked, dashText: el("gDashText").value,
+    optAttn: el("gOptAttn").checked, optDup: el("gOptDup").checked
+  };
+}
+function applyState(s) {
+  if (!s) { return; }
+  el("gNama").value = s.nama || ""; el("gTujuan").value = s.tujuan || "";
+  if (s.sumber) { el("gSumber").value = s.sumber; }
+  el("gKolom").value = s.kolom || ""; el("gAturan").value = s.aturan || ""; el("gAlur").value = s.alur || "";
+  if (s.tampilan) { setRadio("gTampilan", s.tampilan); }
+  el("gOutWa").checked = !!s.outWa; el("gOutCsv").checked = !!s.outCsv; el("gOutBackup").checked = !!s.outBackup;
+  el("gOutImport").checked = !!s.outImport; el("gOutPrint").checked = !!s.outPrint; el("gOutLain").value = s.outLain || "";
+  if (s.simpan) { setRadio("gSimpan", s.simpan === "localStorage dulu" ? "localStorage dengan export & import data (backup & restore JSON)" : s.simpan); }
+  if (s.waktu) { setRadio("gWaktu", s.waktu); }
+  el("gPIC").checked = !!s.pic;
+  if (s.lengkap) { el("gLengkap").value = s.lengkap; }
+  el("gKey").value = s.key || ""; keyTouched = !!s.keyTouched;
+  el("gOptStatus").checked = !!s.optStatus; el("gStatusText").value = s.statusText || "";
+  el("gOptFormat").checked = !!s.optFormat; el("gFormatText").value = s.formatText || "";
+  el("gOptDash").checked = !!s.optDash; if (s.dashText) { el("gDashText").value = s.dashText; }
+  el("gOptAttn").checked = !!s.optAttn; el("gOptDup").checked = !!s.optDup;
+}
+function saveDraft() {
+  var s = collect();
+  try { localStorage.setItem(KEY, JSON.stringify(s)); el("saveInfo").textContent = "Isian tersimpan otomatis di browser ini (localStorage, kunci " + KEY + ")."; }
+  catch (e) { memFallback = s; el("saveInfo").textContent = "localStorage diblokir penampil ini — isian hanya tersimpan selama file dibuka. Buka lewat Chrome."; }
+}
+function loadDraft() {
+  try { var raw = localStorage.getItem(KEY); if (raw) { applyState(JSON.parse(raw)); return; } }
+  catch (e) { if (memFallback) { applyState(memFallback); return; } }
+}
+function onAnyInput(ev) {
+  if (ev && ev.target === el("gKey")) { keyTouched = trim(el("gKey").value) !== ""; }
+  if (ev && ev.target === el("gNama") && !keyTouched) { el("gKey").value = slugKey(el("gNama").value); }
+  generate(); saveDraft();
+}
+function copyText() {
+  var t = el("outPreview"); t.select();
+  try { document.execCommand("copy"); alert("Teks tersalin. Tempel & kirim ke Muse di chat."); }
+  catch (e) { alert("Clipboard terblokir — salin manual dari kotak Hasil di bawah tombol."); }
+}
+function download(name, text, type) {
+  var blob = new Blob([text], { type: type }); var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+function exportData() { download("generator-template-backup.json", JSON.stringify(collect(), null, 2), "application/json"); }
+function importData(ev) {
+  var f = ev.target.files[0]; if (!f) { return; }
+  var r = new FileReader();
+  r.onload = function () {
+    try {
+      var s = JSON.parse(r.result);
+      if (s && typeof s === "object" && ("nama" in s || "kolom" in s || "key" in s)) {
+        applyState(s);
+        if (!keyTouched && trim(el("gNama").value) && !trim(el("gKey").value)) { el("gKey").value = slugKey(el("gNama").value); }
+        generate(); saveDraft();
+        alert("Data diimpor: form terisi dari file backup dan tersimpan di localStorage browser ini.");
+      } else { alert("File tidak dikenali sebagai backup Generator Template."); }
+    } catch (e) { alert("File JSON tidak valid."); }
+  };
+  r.readAsText(f);
+}
+function fillExample() {
+  applyState({
+    nama: "Program Kerja", tujuan: "manajemen & monitoring program kerja tahunan (Plan vs Actual)",
+    sumber: "Foto tabel terlampir — ikuti persis contoh di foto",
+    kolom: "No, Nama Program, Tahun, PIC, Plan per bulan (Jan–Des), Actual per bulan (Jan–Des), Keterangan",
+    aturan: "Plan & Actual ditandai per bulan; Actual boleh di bulan berbeda dari Plan; status otomatis Selesai / Terlambat / Berjalan / Belum Dimulai dan persen realisasi dihitung dari Plan vs Actual",
+    alur: "1. User membuka app → tampil dashboard & matriks tahun berjalan\n2. User menambah program lewat form, atau mengimpor daftar program dari teks yang dipisah koma\n3. User menandai bulan Plan (blok abu) & bulan Actual (arsir) lewat matriks / kartu → data tersimpan\n4. Persen & status tiap program terhitung ulang otomatis; yang lewat jadwal masuk daftar Perlu Perhatian\n5. User menyalin ringkasan WhatsApp / export CSV untuk dibagikan",
+    tampilan: "Matriks + Kartu",
+    outWa: true, outCsv: true, outBackup: true, outImport: true, outPrint: false, outLain: "",
+    simpan: "localStorage dengan export & import data (backup & restore JSON)", waktu: "Per bulan", pic: true,
+    lengkap: "Baru sebagian — sisanya menyusul", key: "programKerjaV1", keyTouched: true,
+    optStatus: false, statusText: "", optFormat: false, formatText: "",
+    optDash: true, dashText: "total / selesai / terlambat / persen rata-rata",
+    optAttn: true, optDup: true
+  });
+  generate(); saveDraft();
+}
+function resetForm() {
+  if (!confirm("Kosongkan semua isian form?")) { return; }
+  try { localStorage.removeItem(KEY); } catch (e) { }
+  memFallback = null; keyTouched = false;
+  applyState({ nama: "", tujuan: "", kolom: "", aturan: "", alur: "", tampilan: "Matriks + Kartu", outWa: true, outCsv: true, outBackup: true, outImport: false, outPrint: false, outLain: "", simpan: "localStorage dengan export & import data (backup & restore JSON)", waktu: "Per bulan", pic: false, lengkap: "Sudah lengkap", key: "", keyTouched: false, optStatus: false, statusText: "", optFormat: false, formatText: "", optDash: false, dashText: "total / selesai / terlambat / persen rata-rata", optAttn: false, optDup: false });
+  generate(); saveDraft();
+}
+
+document.addEventListener("input", onAnyInput);
+document.addEventListener("change", onAnyInput);
+loadDraft();
+if (!keyTouched && trim(el("gNama").value) && !trim(el("gKey").value)) { el("gKey").value = slugKey(el("gNama").value); }
+generate();
+el("js-warning").style.display = "none";
+saveDraft();
+</script>
+</body>
+</html>
